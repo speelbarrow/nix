@@ -1,0 +1,3 @@
+{ stateVersion, ... }: {
+  home = { inherit stateVersion; };
+}

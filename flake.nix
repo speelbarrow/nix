@@ -24,7 +24,9 @@
         })
         home-manager.darwinModules.home-manager {
           users.users.speelbarrow.home = "/Users/speelbarrow";
-          home-manager = modules.outputs.home-manager { inherit stateVersion; };
+          home-manager = let
+            attrs = modules.outputs.home-manager { inherit stateVersion; };
+          in builtins.trace attrs.users.speelbarrow.home attrs;
         }
       ];
       specialArgs = { inherit inputs stateVersion; };

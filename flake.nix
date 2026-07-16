@@ -20,13 +20,14 @@
       modules = [
         modules.outputs.configuration
         ({ ... }: {
-          nixpkgs.system = "aarch64-darwin";
+          nixpkgs = {
+            config.allowUnfree = true;
+            system = "aarch64-darwin";
+          };
         })
         home-manager.darwinModules.home-manager {
           users.users.speelbarrow.home = "/Users/speelbarrow";
-          home-manager = let
-            attrs = modules.outputs.home-manager { inherit stateVersion; };
-          in builtins.trace attrs.users.speelbarrow.home attrs;
+          home-manager = modules.outputs.home-manager { inherit stateVersion; };
         }
       ];
       specialArgs = { inherit inputs stateVersion; };

@@ -1,11 +1,14 @@
-{ pkgs, stateVersion, ... }: {
+{ pkgs, lib, nixvim, stateVersion, ... }: {
+  imports = [ nixvim.homeModules.nixvim ];
   home = { 
     packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+      nix-output-monitor
     ];
     inherit stateVersion;
   };
   programs = {
+    calibre.enable = true;
     git = {
       enable = true;
       ignores = if pkgs.stdenv.isDarwin
@@ -35,13 +38,13 @@
     };
     ghostty = {
       enable = true;
-      package = with pkgs; if stdenv.hostPlatform.isDarwin then ghostty-bin else ghostty;
+      package = with pkgs; if stdenv.isDarwin then ghostty-bin else ghostty;
       enableZshIntegration = true;
       settings = {
         font-family = "JetBrainsMono Nerd Font";
         font-style-bold = "ExtraBold";
         font-style-bold-italic = "ExtraBold-Italic";
-        font-size = if pkgs.stdenv.isDarwin then 14 else 10;
+        font-size = 12;
         font-synthetic-style = false;
         theme = "Dracula+";
         cursor-style = "underline";
@@ -59,6 +62,82 @@
         ];
       };
     };
-    neovim.enable = true;
+    neovide = {
+      enable = true;
+      settings = (
+        {
+          system-native-tabs = true;
+          font =
+            let
+              family = "JetBrainsMono Nerd Font";
+            in
+            {
+              size = 12;
+              normal = [
+                {
+                  inherit family;
+                  style = "Normal";
+                }
+              ];
+              bold = [
+                {
+                  inherit family;
+                  style = "ExtraBold";
+                }
+              ];
+              italic = [
+                {
+                  inherit family;
+                  style = "Italic";
+                }
+              ];
+              bold_italic = [
+                {
+                  inherit family;
+                  style = "ExtraBold-Italic";
+                }
+              ];
+            };
+        }
+        // lib.optionalAttrs pkgs.stdenv.isDarwin {
+          frame = "transparent";
+        }
+      );
+    };
+    nixvim = {	
+      enable = true;
+
+      defaultEditor = true;
+      vimAlias = true;
+
+      colorschemes.dracula-nvim = {
+        enable = true;
+        settings = {
+          colors.menu = "none";
+          transparent_bg = false;
+          italic_comment = true;
+          show_end_of_buffer = true;
+        };
+      };
+
+      globals.health.style = "float";
+      opts = {
+        colorcolumn = "+1";
+        expandtab = true;
+        mouse = "a";
+        number = true;
+        shell = "zsh --login"; # required to get all the sourcings just right
+        shiftwidth = 4;
+        showmode = false;
+        signcolumn = "yes";
+        softtabstop = 4;
+        splitbelow = true;
+        splitright = true;
+        tabstop = 4;
+        textwidth = 100;
+      };
+    };
+    ripgrep.enable = true;
+    vesktop.enable = true;
   };
 }

@@ -13,7 +13,8 @@
             hash = "sha256-aKCRpCBzUYQtpQn7oKvsmvu4Mkmfh1Lm/NmWQlstqII=";
           };
           nativeBuildInputs = [ super._7zz ];
-          unpackCmd = "7zz x -snld -y $curSrc";
+          unpackCmd = "7zz x -snld \"$curSrc\"";
+          dontFixup = true;
           sourceRoot = ".";
           installPhase = ''
             runHook preInstall

@@ -44,7 +44,7 @@
         font-family = "JetBrainsMono Nerd Font";
         font-style-bold = "ExtraBold";
         font-style-bold-italic = "ExtraBold-Italic";
-        font-size = 12;
+        font-size = 14;
         font-synthetic-style = false;
         theme = "Dracula+";
         cursor-style = "underline";
@@ -72,7 +72,7 @@
               family = "JetBrainsMono Nerd Font";
             in
             {
-              size = 12;
+              size = 14;
               normal = [
                 {
                   inherit family;

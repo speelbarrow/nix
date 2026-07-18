@@ -14,12 +14,13 @@
           };
           nativeBuildInputs = [ super._7zz ];
           unpackCmd = "7zz x -snld \"$curSrc\"";
-          dontFixup = true;
           sourceRoot = ".";
           installPhase = ''
             runHook preInstall
+
             mkdir -p $out/Applications
-            cp -R calibre.app $out/Applications
+            cp -a calibre.app $out/Applications
+
             runHook postInstall
           '';
         } else self.calibre;

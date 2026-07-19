@@ -2,13 +2,20 @@
   imports = [
     ./neovim
   ];
-  home = { 
-    packages = with pkgs; [
-      nerd-fonts.jetbrains-mono
-      nix-output-monitor
-    ];
-    inherit stateVersion;
-  };
+  home = with pkgs; lib.mkMerge [
+		{
+			packages = [
+				nerd-fonts.jetbrains-mono
+				nix-output-monitor
+			];
+			inherit stateVersion;
+		}
+		(lib.mkIf stdenv.isDarwin {
+			packages = [
+				container
+			];
+		})
+	];
   programs = {
     calibre.enable = true;
     git = {

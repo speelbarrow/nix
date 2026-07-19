@@ -1,7 +1,9 @@
 { pkgs, lib, nixvim, ... }: {
   imports = [
     nixvim.homeModules.nixvim
-    ./files.nix
+    ./file.nix
+    ./keymap.nix
+    ./plugin
   ];
   programs = {
     neovide = {
@@ -63,7 +65,7 @@
       };
 
       globals.health.style = "float";
-      globalOpts = {
+      opts = {
         colorcolumn = "+1";
         expandtab = true;
         mouse = "a";

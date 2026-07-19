@@ -33,6 +33,13 @@ in {
         inherit mode;
       }
 
+      # notify
+      {
+        action.__raw = "function() require'notify'.dismiss { pending = false, silent = false } end";
+        key = "<M-n>";
+        inherit mode;
+      }
+
       # terminal
       {
         action.__raw = ''function()

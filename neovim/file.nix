@@ -1,5 +1,5 @@
 { pkgs, lib, ... }: let
-  indent = count: filetypes: builtins.listToAttrs (builtins.map (filetype: {
+  indent = count: filetypes: builtins.listToAttrs (map (filetype: {
     name = "after/ftplugin/${filetype}.lua";
     value.localOpts = {
       shiftwidth = count;
@@ -23,8 +23,16 @@ in {
       '';
     };
     files = lib.mkMerge [
-      (indent 2 [ "lua" "nix" ])
+      (indent 2 [ "lua" ])
       (indent 8 [ "sshconfig" ])
+      {
+        "after/ftplugin/nix.lua".localOpts = {
+          shiftwidth = 2;
+          softtabstop = 2;
+          tabstop = 2;
+          textwidth = 120;
+        };
+      }
     ];
   };
 }

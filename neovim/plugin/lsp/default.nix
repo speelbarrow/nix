@@ -1,12 +1,12 @@
-{ pkgs, lib, ... }: {
+{ pkgs, ... }: {
   programs.nixvim = {
     lsp = {
       inlayHints.enable = true;
-
       servers = {
         nixd.enable = true;
       };
     };
+    extraPackages = with pkgs; [ nixfmt ];
 
     plugins = {
       fidget = {

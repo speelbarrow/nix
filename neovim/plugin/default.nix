@@ -1,6 +1,7 @@
 { ... }: {
   imports = [
     ./lsp
+    ./spLauncher
     ./treesitter.nix
   ];
   programs.nixvim.plugins = {
@@ -17,6 +18,8 @@
     notify = {
       enable = true;
       lazyLoad.settings.event = "DeferredUIEnter";
+
+      settings.stages = "slide";
     };
   };
 }

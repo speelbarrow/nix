@@ -22,6 +22,9 @@ in {
         end
       '';
     };
-    files = indent 2 [ "lua" "nix" ];
+    files = lib.mkMerge [
+      (indent 2 [ "lua" "nix" ])
+      (indent 8 [ "sshconfig" ])
+    ];
   };
 }

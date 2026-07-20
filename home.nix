@@ -1,4 +1,4 @@
-{ pkgs, lib, nixvim, stateVersion, ... }: {
+{ pkgs, lib, stateVersion, ... }: {
   imports = [
     ./neovim
   ];

@@ -21,18 +21,16 @@ in {
           ${if pkgs.stdenv.isDarwin then "vim.g.neovide_input_macos_option_key_is_meta = 'both'" else ""}
         end
       '';
+      "after/ftplugin/nix.lua".text = lib.mkBefore ''
+        vim.bo.shiftwidth = 2;
+        vim.bo.softtabstop = 2;
+        vim.bo.tabstop = 2;
+        vim.bo.textwidth = 120;
+      '';
     };
     files = lib.mkMerge [
       (indent 2 [ "lua" ])
       (indent 8 [ "sshconfig" ])
-      {
-        "after/ftplugin/nix.lua".localOpts = {
-          shiftwidth = 2;
-          softtabstop = 2;
-          tabstop = 2;
-          textwidth = 120;
-        };
-      }
     ];
   };
 }

@@ -5,8 +5,10 @@
   home = with pkgs; lib.mkMerge [
 		{
 			packages = [
+        cargo-generate
 				nerd-fonts.jetbrains-mono
 				nix-output-monitor
+        rustc
         tree
 			];
 			inherit stateVersion;
@@ -19,6 +21,10 @@
 	];
   programs = {
     calibre.enable = true;
+    cargo = {
+      enable = true;
+      settings.cargo-new.vcs = "none";
+    };
     git = {
       enable = true;
       ignores = if pkgs.stdenv.isDarwin

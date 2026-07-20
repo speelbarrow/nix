@@ -135,6 +135,20 @@
         lazyLoad.settings.event = "LspAttach";
         autoActivate = false; # handled in `lsp.onAttach`
       };
+      rustaceanvim = {
+        enable = true;
+        settings = {
+          server.default_settings.rust-analyzer = {
+            cargo.features = "all";
+            semanticHighlighting.strings.enable = true;
+          };
+          tools = {
+            enable_clippy = false;
+            enable_nextest = false;
+            hover_actions.replace_builtin_hover = false;
+          };
+        };
+      };
     };
 
     extraPlugins = [

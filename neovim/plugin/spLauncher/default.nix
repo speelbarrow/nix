@@ -40,9 +40,6 @@
             Debug = "nix-shell --show-trace %";
             build = "nom-build %";
             Build = "nom-build --show-trace %";
-            __raw = ''
-              local source = vim.fn.expand("%:p")
-            '';
           };
         }
       )

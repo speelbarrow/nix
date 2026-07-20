@@ -7,6 +7,7 @@
 			packages = [
 				nerd-fonts.jetbrains-mono
 				nix-output-monitor
+        tree
 			];
 			inherit stateVersion;
 		}

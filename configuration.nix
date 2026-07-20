@@ -32,6 +32,7 @@
     };
   }
   (lib.mkIf pkgs.stdenv.isDarwin {
+    environment.pathsToLink = [ "/libexec" ]; # required for `container`, nixpkgs#445648
     security.pam.services.sudo_local.touchIdAuth = true;
   })
 ]

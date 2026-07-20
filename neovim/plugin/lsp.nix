@@ -22,7 +22,7 @@
             };
             hint.enable = true;
             on_init.__raw = ''
-              function(client)          
+              function(client)
                 local path = vim.o.packpath:match("([^,]+)") .. "/pack/myNeovimPackages/"
 
                 client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
@@ -44,6 +44,7 @@
         };
         nixd.enable = true;
       };
+      onAttach = "require'otter'.activate(nil, true, false, nil)";
     };
     extraPackages = with pkgs; [ nixfmt ];
 
@@ -129,12 +130,10 @@
           ignore_done_already = true;
         };
       };
-      lsp = {
+      otter = {
         enable = true;
-        lazyLoad.settings.event = [
-          "BufReadPre"
-          "BufNewFile"
-        ];
+        lazyLoad.settings.event = "LspAttach";
+        autoActivate = false; # handled in `lsp.onAttach`
       };
     };
 

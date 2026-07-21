@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  fenix,
   stateVersion,
   ...
 }:
@@ -35,7 +34,6 @@
           '';
         } else self.calibre;
       })
-      fenix.overlays.default
     ];
   };
   home =
@@ -48,10 +46,11 @@
           llvmPackages.libllvm
           llvmPackages.libcxx
 
+          cargo
           cargo-generate
-          pkgs.fenix.stable.defaultToolchain
           nerd-fonts.jetbrains-mono
           nix-output-monitor
+          rustc
           tree
         ];
         inherit stateVersion;

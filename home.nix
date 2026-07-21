@@ -1,35 +1,72 @@
-{ pkgs, lib, stateVersion, ... }: {
+{
+  pkgs,
+  lib,
+  fenix,
+  stateVersion,
+  ...
+}:
+{
   imports = [
     ./neovim
   ];
-  home = with pkgs; lib.mkMerge [
-		{
-			packages = [
-        cargo-generate
-				nerd-fonts.jetbrains-mono
-				nix-output-monitor
-        rustc
-        tree
-			];
-			inherit stateVersion;
-		}
-		(lib.mkIf stdenv.isDarwin {
-			packages = [
-				container
-			];
-		})
-	];
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = [
+      (super: self: {
+        calibre = if self.stdenv.isDarwin then self.stdenv.mkDerivation rec {
+          inherit (self.calibre) name version;
+          meta = {
+            inherit (self.calibre.meta) homepage description longDescription changelog license maintainers platforms;
+          };
+          src = self.fetchurl {
+            url = "https://download.calibre-ebook.com/${version}/calibre-${version}.dmg";
+            hash = "sha256-MAwazx+LlB4mXQ+MOfxgjDz+qGWjFwLghGQ9U2t4yVE=";
+          };
+          nativeBuildInputs = [ super._7zz ];
+          unpackCmd = "7zz x -snld \"$curSrc\"";
+          sourceRoot = ".";
+          installPhase = ''
+            runHook preInstall
+
+            mkdir -p $out/Applications
+            cp -a calibre.app $out/Applications
+
+            runHook postInstall
+          '';
+        } else self.calibre;
+      })
+      fenix.overlays.default
+    ];
+  };
+  home =
+    with pkgs;
+    lib.mkMerge [
+      {
+        packages = [
+          # order is important!
+          llvmPackages.libcxxClang
+          llvmPackages.libllvm
+          llvmPackages.libcxx
+
+          cargo-generate
+          pkgs.fenix.stable.defaultToolchain
+          nerd-fonts.jetbrains-mono
+          nix-output-monitor
+          tree
+        ];
+        inherit stateVersion;
+      }
+      (lib.mkIf stdenv.isDarwin {
+        packages = [
+          container
+        ];
+      })
+    ];
   programs = {
     calibre.enable = true;
-    cargo = {
-      enable = true;
-      settings.cargo-new.vcs = "none";
-    };
     git = {
       enable = true;
-      ignores = if pkgs.stdenv.isDarwin
-                then [".DS_Store"]
-                else [];
+      ignores = if pkgs.stdenv.isDarwin then [ ".DS_Store" ] else [ ];
       settings = {
         core.editor = "nvim";
         init.defaultBranch = "main";
@@ -80,5 +117,43 @@
     };
     ripgrep.enable = true;
     vesktop.enable = true;
+    zsh = {
+      enable = true;
+
+      initContent = lib.mkIf pkgs.stdenv.isDarwin ''
+        export SDKROOT="${pkgs.apple-sdk.passthru.sdkroot}"
+      '';
+
+      autosuggestion.enable = true;
+      defaultKeymap = "viins";
+      history.share = true;
+      historySubstringSearch.enable = true;
+      localVariables =
+        with lib;
+        mkMerge [
+          {
+            DRACULA_ARROW_ICON = "-> ";
+            DRACULA_DISPLAY_CONTEXT = 1;
+            DRACULA_DISPLAY_FULL_CWD = 1;
+            DRACULA_DISPLAY_TIME = 1;
+            DRACULA_TIME_FORMAT = "%-I:%M:%S %p";
+            ZSH_THEME = "dracula";
+          }
+          (mkIf pkgs.stdenv.isLinux { DEBIAN_PREVENT_KEYBOARD_CHANGES = "yes"; })
+        ];
+      plugins = [
+        {
+          name = "dracula";
+          file = "dracula.zsh-theme";
+          src = pkgs.fetchFromGitHub {
+            owner = "dracula";
+            repo = "zsh";
+            rev = "a3e27d47ea2ed1e3b435f44aa71caf71d3219af6";
+            hash = "sha256-unPUH3D89gH0j8/kv1Dl+ybR5n8UX0hJ+SuETtgpJOo=";
+          };
+        }
+      ];
+      syntaxHighlighting.enable = true;
+    };
   };
 }

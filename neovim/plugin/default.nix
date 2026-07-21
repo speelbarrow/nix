@@ -1,5 +1,6 @@
-{ pkgs, ... }: {
+{ ... }: {
   imports = [
+    ./dap.nix
     ./lsp.nix
     ./spLauncher
     ./treesitter.nix
@@ -24,6 +25,28 @@
         lazyLoad.settings.event = "DeferredUIEnter";
 
         settings.stages = "slide";
+      };
+      project-nvim = {
+        enable = true;
+        lazyLoad.settings.event = "User DeferredUIEnter";
+        settings = {
+          patterns = [
+            ".git"
+            "Cargo.toml"
+            "CMakeLists.txt"
+            "compile_commands.json"
+            "package.json"
+            "platformio.ini"
+            "pyproject.toml"
+            ">.config"
+            ">Git"
+            ">Scratch"
+            "Scratch"
+            ">/etc"
+          ];
+          scope_chdir = "win";
+          silent_chdir = false;
+        };
       };
     };
   };

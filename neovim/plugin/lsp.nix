@@ -52,7 +52,7 @@
       blink-cmp =
         let
           winblend = {
-            __raw = "vim.g.neovide == true and 15 or vim.o.winblend";
+            __raw = "vim.g.neovide == true and 15 or nil";
           };
         in
         {

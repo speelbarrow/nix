@@ -120,7 +120,7 @@ in
             }
             {
               key = "u";
-              action.__raw = "require'dapui'.toggle";
+              action.__raw = "function() require'dapui'.toggle() end";
             }
           ]
         )

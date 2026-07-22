@@ -46,7 +46,10 @@
       };
       onAttach = "require'otter'.activate(nil, true, false, nil)";
     };
-    extraPackages = with pkgs; [ nixfmt ];
+    extraPackages = with pkgs; [ 
+      nixfmt
+      rustfmt
+    ];
 
     plugins = {
       blink-cmp =

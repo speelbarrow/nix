@@ -70,7 +70,20 @@
       }
       (lib.mkIf stdenv.isDarwin {
         packages = [
-          container
+          (container.overrideAttrs (self: rec {
+            version = "1.1.0";
+            src = fetchurl {
+              url = "https://github.com/apple/container/releases/download/${version}/container-${version}-installer-signed.pkg";
+              hash = "sha256-DKHEKiJpwlV++x2CsbOKxVPmo6PaGxF5xDm87h59ZxQ=";
+            };
+            nativeBuildInputs = self.nativeBuildInputs ++ [ pkgs.makeWrapper ];
+            postFixup = ''
+              wrapProgram $out/bin/container \
+                --set-default CONTAINER_INSTALL_ROOT "$out"
+              wrapProgram $out/bin/container-apiserver \
+                --set-default CONTAINER_INSTALL_ROOT "$out"
+            '';
+          }))
         ];
       })
     ];

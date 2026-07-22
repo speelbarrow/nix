@@ -6,7 +6,7 @@
       stateVersion = if pkgs.stdenv.isDarwin then 6 else stateVersion;
     };
   }
-  (lib.mkIf pkgs.stdenv.isDarwin {
+  (with pkgs; lib.mkIf stdenv.isDarwin {
     environment.pathsToLink = [ "/libexec" ]; # required for `container`, nixpkgs#445648
     security.pam.services.sudo_local.touchIdAuth = true;
   })

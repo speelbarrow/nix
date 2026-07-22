@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  full,
   stateVersion,
   ...
 }:
@@ -12,27 +13,39 @@
     config.allowUnfree = true;
     overlays = [
       (super: self: {
-        calibre = if self.stdenv.isDarwin then self.stdenv.mkDerivation rec {
-          inherit (self.calibre) name version;
-          meta = {
-            inherit (self.calibre.meta) homepage description longDescription changelog license maintainers platforms;
-          };
-          src = self.fetchurl {
-            url = "https://download.calibre-ebook.com/${version}/calibre-${version}.dmg";
-            hash = "sha256-MAwazx+LlB4mXQ+MOfxgjDz+qGWjFwLghGQ9U2t4yVE=";
-          };
-          nativeBuildInputs = [ super._7zz ];
-          unpackCmd = "7zz x -snld \"$curSrc\"";
-          sourceRoot = ".";
-          installPhase = ''
-            runHook preInstall
+        calibre =
+          if self.stdenv.isDarwin then
+            self.stdenv.mkDerivation rec {
+              inherit (self.calibre) name version;
+              meta = {
+                inherit (self.calibre.meta)
+                  homepage
+                  description
+                  longDescription
+                  changelog
+                  license
+                  maintainers
+                  platforms
+                  ;
+              };
+              src = self.fetchurl {
+                url = "https://download.calibre-ebook.com/${version}/calibre-${version}.dmg";
+                hash = "sha256-MAwazx+LlB4mXQ+MOfxgjDz+qGWjFwLghGQ9U2t4yVE=";
+              };
+              nativeBuildInputs = [ super._7zz ];
+              unpackCmd = "7zz x -snld \"$curSrc\"";
+              sourceRoot = ".";
+              installPhase = ''
+                runHook preInstall
 
-            mkdir -p $out/Applications
-            cp -a calibre.app $out/Applications
+                mkdir -p $out/Applications
+                cp -a calibre.app $out/Applications
 
-            runHook postInstall
-          '';
-        } else self.calibre;
+                runHook postInstall
+              '';
+            }
+          else
+            self.calibre;
       })
     ];
   };
@@ -62,7 +75,7 @@
       })
     ];
   programs = {
-    calibre.enable = true;
+    calibre.enable = lib.mkIf full true;
     git = {
       enable = true;
       ignores = if pkgs.stdenv.isDarwin then [ ".DS_Store" ] else [ ];
@@ -80,7 +93,7 @@
         signByDefault = true;
       };
     };
-    google-chrome.enable = true;
+    google-chrome.enable = lib.mkIf full true;
     gpg = {
       enable = true;
       publicKeys = [
@@ -118,10 +131,6 @@
     vesktop.enable = true;
     zsh = {
       enable = true;
-
-      initContent = lib.mkIf pkgs.stdenv.isDarwin ''
-        export SDKROOT="${pkgs.apple-sdk.passthru.sdkroot}"
-      '';
 
       autosuggestion.enable = true;
       defaultKeymap = "viins";

@@ -1,6 +1,7 @@
 { ... }: {
   imports = [
     ./dap.nix
+    ./git.nix
     ./lsp.nix
     ./spLauncher
     ./treesitter.nix

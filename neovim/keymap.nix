@@ -125,6 +125,98 @@ in
           ]
         )
 
+        # git
+        (
+          let
+            leader = "<M-g>";
+            mode = [
+              "n"
+              "i"
+            ];
+
+            mkAction =
+              follower: body:
+              map
+                (
+                  { action, mode }:
+                  {
+                    action = if action ? __raw then action else "<Cmd>${action}<CR>";
+                    key = "${leader}${follower}";
+                    inherit mode;
+                  }
+                )
+                (
+                  if body ? withV then
+                    lib.warnIf (body ? action) "using 'withV' instead of 'action'" [
+                      {
+                        action = body.withV;
+                        inherit mode;
+                      }
+                      {
+                        action = if body.withV ? __raw then body.withV else "'<,'>${body.withV}";
+                        mode = "v";
+                      }
+                    ]
+                  else
+                    [ ((if body ? action then body else { action = body; }) // { inherit mode; }) ]
+                );
+          in
+          lib.mapAttrsToList mkAction {
+            a.withV = "Gitsigns stage_hunk";
+            b = "Git branch";
+            c = "Git commit";
+            d.withV = "Gitsigns preview_hunk";
+            l = "Git log";
+            n = "Gitsigns next_hunk";
+            p = "Git push | Git push --tags";
+            r.withV = warn "reset hunk" "Gitsigns reset_hunk";
+            s = "Git status";
+            t = "Git push --tags";
+            u = "Gitsigns undo_stage_hunk";
+            x.__raw = ''
+              function()
+                vim.cmd "Git commit"
+                vim.api.nvim_create_autocmd("User", {
+                  pattern = "FugitiveChanged",
+                  once = true,
+                  command = "Git push",
+                })
+              end
+            '';
+            A = "Gitsigns stage_buffer";
+            C = warn "amend commit" "Git commit --amend";
+            L = "Git log %";
+            N = "Gitsigns prev_hunk";
+            P = warn "force push" "Git push -f";
+            R = warn "reset buffer" "Gitsigns reset_buffer";
+            S = "Git stash list";
+            X = warn "amend commit and force push" {
+              __raw = ''
+                function()
+                  vim.cmd "Git commit --amend"
+                  vim.api.nvim_create_autocmd("User", {
+                    pattern = "FugitiveChanged",
+                    once = true,
+                    command = "Git push -f",
+                  })
+                end
+              '';
+            };
+            "<C-a>" = "Git add .";
+            "<C-x>".__raw = ''
+              function()
+                vim.cmd "Git add .";
+                vim.cmd "tab Git commit";
+                vim.api.nvim_create_autocmd("User", {
+                  pattern = "FugitiveChanged",
+                  once = true,
+                  command = "Git push",
+                })
+              end
+            '';
+          }
+        )
+
         # highlight
         {
           action = "<Cmd>noh<CR>";
@@ -143,21 +235,22 @@ in
         {
           action.__raw = ''
             function()
-                      local command = "sp +terminal"
-                      if vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "buftype") == "terminal" then
-                        command = "v" .. command
-                      end
-                      command = "<Cmd>" .. command .. "<CR>"
-                      local mode = vim.api.nvim_get_mode().mode
-                      if mode ~= "i" and mode ~= "t" then
-                        command = command .. "i"
-                      end
-                      vim.api.nvim_feedkeys(
-                        vim.api.nvim_replace_termcodes(command, true, false, true),
-                        'n',
-                        false
-                      )
-                    end'';
+              local command = "sp +terminal"
+              if vim.api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "buftype") == "terminal" then
+                command = "v" .. command
+              end
+              command = "<Cmd>" .. command .. "<CR>"
+              local mode = vim.api.nvim_get_mode().mode
+              if mode ~= "i" and mode ~= "t" then
+                command = command .. "i"
+              end
+              vim.api.nvim_feedkeys(
+                vim.api.nvim_replace_termcodes(command, true, false, true),
+                'n',
+                false
+              )
+            end
+          '';
           key = "<M-t>";
           inherit mode;
         }

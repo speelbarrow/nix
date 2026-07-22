@@ -96,7 +96,7 @@
                     return (vim.b.spLauncherActionMap.run() .. " --release")
                   end,
                   Debug = function() vim.cmd "DapNew Debug\\ tests\\ (+args)" end,
-                  Test = "t --release",
+                  Test = "t -- --nocapture",
                   Build = "b --release",
                   Clean = "c --release"
                 })

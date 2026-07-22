@@ -125,6 +125,10 @@
             };
           };
         };
+      crates = {
+        enable = true;
+        lazyLoad.settings.event = "BufEnter *Cargo.toml";
+      };
       fidget = {
         enable = true;
         lazyLoad.settings.event = "LspAttach";

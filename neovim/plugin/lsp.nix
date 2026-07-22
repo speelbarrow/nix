@@ -61,6 +61,11 @@
         {
           enable = true;
           settings = {
+            enabled.__raw = ''
+              function() 
+                return (vim.bo.filetype ~= "DressingInput") and not (vim.bo.filetype:find("^dap") ~= nil) 
+              end
+            '';
             completion = {
               documentation = {
                 window.border = "rounded";

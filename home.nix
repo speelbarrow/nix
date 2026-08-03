@@ -12,13 +12,13 @@
   nixpkgs = {
     config.allowUnfree = true;
     overlays = [
-      (super: self: {
+      (self: super: {
         calibre =
-          if self.stdenv.isDarwin then
-            self.stdenv.mkDerivation rec {
-              inherit (self.calibre) name version;
+          if super.stdenv.isDarwin then
+            super.stdenv.mkDerivation rec {
+              inherit (super.calibre) name version;
               meta = {
-                inherit (self.calibre.meta)
+                inherit (super.calibre.meta)
                   homepage
                   description
                   longDescription
@@ -28,7 +28,7 @@
                   platforms
                   ;
               };
-              src = self.fetchurl {
+              src = super.fetchurl {
                 url = "https://download.calibre-ebook.com/${version}/calibre-${version}.dmg";
                 hash = "sha256-MAwazx+LlB4mXQ+MOfxgjDz+qGWjFwLghGQ9U2t4yVE=";
               };
@@ -45,7 +45,35 @@
               '';
             }
           else
-            self.calibre;
+            super.calibre;
+        godot =
+          with pkgs;
+          if super.stdenv.isDarwin then
+            stdenv.mkDerivation rec {
+              inherit (super.godot)
+                man
+                name
+                ;
+              version = "4.7.1-stable";
+              meta = super.godot.meta // {
+                changelog = "https://github.com/godotengine/godot/releases/tag/${version}";
+                name = "godot-${version}";
+              };
+              src = fetchurl {
+                url = "https://godot-releases.nbg1.your-objectstorage.com/${version}/Godot_v${version}_macos.universal.zip";
+                hash = "sha256-iXy3+XmXlscXrnXzFEau2IPckrHWw7M9iTzHhD//L6k=";
+              };
+              nativeBuildInputs = [ unzip ];
+              sourceRoot = ".";
+              installPhase = ''
+                runHook preInstall
+                mkdir -p $out/Applications
+                cp -R Godot.app $out/Applications
+                runHook postInstall
+              '';
+            }
+          else
+            super.godot;
       })
     ];
   };
@@ -61,8 +89,10 @@
 
           cargo
           cargo-generate
+
           nerd-fonts.jetbrains-mono
           nix-output-monitor
+          radare2
           rustc
           tree
         ];
@@ -84,10 +114,18 @@
                 --set-default CONTAINER_INSTALL_ROOT "$out"
             '';
           }))
+          darwin.libiconv
+        ];
+        sessionVariables.LIBRARY_PATH = "${darwin.libiconv}/lib";
+      })
+      (lib.mkIf full {
+        packages = [
+          godot
         ];
       })
     ];
   programs = {
+    bun.enable = true;
     calibre.enable = lib.mkIf full true;
     git = {
       enable = true;
@@ -142,6 +180,7 @@
     };
     ripgrep.enable = true;
     vesktop.enable = true;
+    yt-dlp.enable = true;
     zsh = {
       enable = true;
 

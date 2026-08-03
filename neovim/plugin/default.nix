@@ -23,7 +23,7 @@
       lz-n.enable = true;
       notify = {
         enable = true;
-        lazyLoad.settings.event = "DeferredUIEnter";
+        lazyLoad.settings.event = "User DeferredUIEnter";
 
         settings.stages = "slide";
       };

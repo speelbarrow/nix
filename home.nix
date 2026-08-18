@@ -30,7 +30,7 @@
               };
               src = super.fetchurl {
                 url = "https://download.calibre-ebook.com/${version}/calibre-${version}.dmg";
-                hash = "sha256-MAwazx+LlB4mXQ+MOfxgjDz+qGWjFwLghGQ9U2t4yVE=";
+                hash = "sha256-ABvm7XDYrP15P6fYyV6lAEWr7a8OdWsg5WQnWgsKdmc=";
               };
               nativeBuildInputs = [ super._7zz ];
               unpackCmd = "7zz x -snld \"$curSrc\"";
@@ -121,6 +121,7 @@
       (lib.mkIf full {
         packages = [
           godot
+          musescore
         ];
       })
     ];

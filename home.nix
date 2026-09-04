@@ -30,7 +30,7 @@
               };
               src = super.fetchurl {
                 url = "https://download.calibre-ebook.com/${version}/calibre-${version}.dmg";
-                hash = "sha256-ABvm7XDYrP15P6fYyV6lAEWr7a8OdWsg5WQnWgsKdmc=";
+                hash = "sha256-ovglE4ZF6inZ93p4wXchbA24VfoMe5k6FqziMMBP49Q=";
               };
               nativeBuildInputs = [ super._7zz ];
               unpackCmd = "7zz x -snld \"$curSrc\"";

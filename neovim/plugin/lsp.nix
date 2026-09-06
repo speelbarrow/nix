@@ -77,8 +77,8 @@
               end
             '';
             completion = {
-              documentation = {
-                window.border = "rounded";
+              documentation.window = {
+                border = "rounded";
                 inherit winblend;
               };
               menu = {

@@ -166,27 +166,32 @@
       enable = true;
       package = with pkgs; if stdenv.isDarwin then ghostty-bin else ghostty;
       enableZshIntegration = true;
-      settings = {
-        font-family = "JetBrainsMono Nerd Font";
-        font-style-bold = "ExtraBold";
-        font-style-bold-italic = "ExtraBold-Italic";
-        font-size = 14;
-        font-synthetic-style = false;
-        theme = "Dracula+";
-        cursor-style = "underline";
-        cursor-click-to-move = true;
-        background-opacity = 0.9;
-        window-padding-balance = true;
-        quit-after-last-window-closed = true;
-        shell-integration-features = "no-cursor,ssh-terminfo";
-        bold-is-bright = true;
-        auto-update = "off";
-        keybind = [
-          "f1=set_font_size:10"
-          "f2=set_font_size:14"
-          "f3=set_font_size:18"
-        ];
-      };
+      settings = with lib; mkMerge [
+        {
+          font-family = "JetBrainsMono Nerd Font";
+          font-style-bold = "ExtraBold";
+          font-style-bold-italic = "ExtraBold-Italic";
+          font-size = 14;
+          font-synthetic-style = false;
+          theme = "Dracula+";
+          cursor-style = "underline";
+          cursor-click-to-move = true;
+          background-opacity = 0.9;
+          window-padding-balance = true;
+          quit-after-last-window-closed = true;
+          shell-integration-features = "no-cursor,ssh-terminfo";
+          bold-is-bright = true;
+          auto-update = "off";
+          keybind = [
+            "f1=set_font_size:10"
+            "f2=set_font_size:14"
+            "f3=set_font_size:18"
+          ];
+        }
+        (mkIf pkgs.stdenv.isDarwin {
+          macos-option-as-alt = true;
+        })
+      ];
     };
     ripgrep.enable = true;
     vesktop.enable = true;

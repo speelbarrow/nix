@@ -43,11 +43,20 @@
           };
         };
         nixd.enable = true;
+        tinymist = {
+          enable = true;
+          config = {
+            formatterMode = "typstyle";
+            formatterPrintWidth = 80;
+            formatterProseWrap = true;
+            lint.enabled = true;
+          };
+        };
         wgsl_analyzer.enable = true;
       };
       onAttach = "require'otter'.activate(nil, true, false, nil)";
     };
-    extraPackages = with pkgs; [ 
+    extraPackages = with pkgs; [
       nixfmt
       rustfmt
     ];
@@ -163,14 +172,16 @@
       rustaceanvim = {
         enable = true;
         settings = {
-          dap.adapter.__raw = let 
-            root = "${pkgs.vscode-extensions.vadimcn.vscode-lldb}/share/vscode/extensions/vadimcn.vscode-lldb";
-          in ''
-            require"rustaceanvim.config".get_codelldb_adapter(
-              "${root}/adapter/codelldb",
-              "${root}/lldb/lib/liblldb.${if pkgs.stdenv.isDarwin then "dylib" else "so"}"
-            )
-          '';
+          dap.adapter.__raw =
+            let
+              root = "${pkgs.vscode-extensions.vadimcn.vscode-lldb}/share/vscode/extensions/vadimcn.vscode-lldb";
+            in
+            ''
+              require"rustaceanvim.config".get_codelldb_adapter(
+                "${root}/adapter/codelldb",
+                "${root}/lldb/lib/liblldb.${if pkgs.stdenv.isDarwin then "dylib" else "so"}"
+              )
+            '';
           server.default_settings.rust-analyzer = {
             cargo.features = "all";
             semanticHighlighting.strings.enable = true;
@@ -181,6 +192,10 @@
             hover_actions.replace_builtin_hover = false;
           };
         };
+      };
+      typst-preview = {
+        enable = true;
+        lazyLoad.settings.event = "FileType typst";
       };
     };
 

@@ -104,6 +104,7 @@
           radare2
           rustc
           tree
+          typst
         ];
         inherit stateVersion;
       }

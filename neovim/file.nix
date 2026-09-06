@@ -27,6 +27,12 @@ in {
         vim.bo.tabstop = 2;
         vim.bo.textwidth = 120;
       '';
+      "after/ftplugin/typst.lua".text = lib.mkBefore ''
+        vim.bo.shiftwidth = 2;
+        vim.bo.softtabstop = 2;
+        vim.bo.tabstop = 2;
+        vim.bo.textwidth = 80;
+      '';
     };
     files = lib.mkMerge [
       (indent 2 [ "lua" ])

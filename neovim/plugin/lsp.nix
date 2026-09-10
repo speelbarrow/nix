@@ -171,17 +171,11 @@
       };
       rustaceanvim = {
         enable = true;
+        lazyLoad.settings.event = [
+          "BufReadPre *.rs"
+          "BufNewFile *.rs"
+        ];
         settings = {
-          dap.adapter.__raw =
-            let
-              root = "${pkgs.vscode-extensions.vadimcn.vscode-lldb}/share/vscode/extensions/vadimcn.vscode-lldb";
-            in
-            ''
-              require"rustaceanvim.config".get_codelldb_adapter(
-                "${root}/adapter/codelldb",
-                "${root}/lldb/lib/liblldb.${if pkgs.stdenv.isDarwin then "dylib" else "so"}"
-              )
-            '';
           server.default_settings.rust-analyzer = {
             cargo.features = "all";
             semanticHighlighting.strings.enable = true;

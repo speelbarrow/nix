@@ -49,20 +49,7 @@
                 return "-o " .. temp .. " % && " .. temp
               end
             '';
-            debug = {
-              handler.__raw = ''
-                function()
-                  local temp = vim.fn.tempname()
-                  return "-g -o " .. temp .. " % && rust-lldb " .. temp
-                end
-              '';
-              config = {
-                window = {
-                  focus = "insert";
-                  persist = false;
-                };
-              };
-            };
+            debug.__raw = "function() vim.cmd.DapNew() end";
             test.__raw = ''
               function()
                 local temp = vim.fn.tempname()
@@ -88,14 +75,13 @@
                       return "r"
                     end
                   end,
-                  debug = function() vim.cmd "DapNew Debug\\ (+args)" end,
+                  debug = function() vim.cmd.DapNew() end,
                   test = "t",
                   build = "b",
                   clean = "c",
                   Run = function()
                     return (vim.b.spLauncherActionMap.run() .. " --release")
                   end,
-                  Debug = function() vim.cmd "DapNew Debug\\ tests\\ (+args)" end,
                   Test = "t -- --nocapture",
                   Build = "b --release",
                   Clean = "c --release"

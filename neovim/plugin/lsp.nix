@@ -43,6 +43,7 @@
           };
         };
         nixd.enable = true;
+        pylsp.enable = true;
         tinymist = {
           enable = true;
           config = {
@@ -52,6 +53,7 @@
             lint.enabled = true;
           };
         };
+        taplo.enable = true;
         wgsl_analyzer.enable = true;
       };
       onAttach = "require'otter'.activate(nil, true, false, nil)";

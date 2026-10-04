@@ -178,10 +178,7 @@
           "BufNewFile *.rs"
         ];
         settings = {
-          server.default_settings.rust-analyzer = {
-            cargo.features = "all";
-            semanticHighlighting.strings.enable = true;
-          };
+          server.default_settings.rust-analyzer.semanticHighlighting.strings.enable = true;
           tools = {
             enable_clippy = false;
             enable_nextest = false;

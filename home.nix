@@ -132,6 +132,7 @@
         packages = [
           godot
           musescore
+          wireshark
         ];
       })
     ];
